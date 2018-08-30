@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "DeleteProduct";
+
+    var db = Database.Open("StarterSite");
+    var IdPutovanje = UrlData[0];
+    if (IdPutovanje.IsEmpty())
+    {
+        Response.Redirect("~/ListProductsForDelete");
+    }
+    var prod = db.QuerySingle("SELECT * FROM Putovanje WHERE IDPutovanje = @0", IdPutovanje);
+    if (IsPost && !IdPutovanje.IsEmpty())
+    {
+        var deleteQueryString = "DELETE FROM Putovanje WHERE IdPutovanje=@0";
+        db.Execute(deleteQueryString, IdPutovanje);
+        Response.Redirect("~/ListProductsForDelete");
+    }
+}
+
+<br /><br /><br /><br /><br />
+<h1>Potvrda</h1>
+<form method="post" action="" name="form">
+    <p>Jeste li sigurni?</p>
+
+    <p>
+        Id: @prod.IdPutovanje <br />
+        Naziv: @prod.NazivPutovanja <br />
+        Cijena: @prod.Cijena <br />
+        Datum kreiranja: @prod.DatumKreiranjaPutovanja <br />
+        Polazak: @prod.Polazak <br />
+        Povratak: @prod.Povratak <br />
+        Status putovanja: @prod.StatusPutovanja <br />
+    </p>
+    <p><input type="submit" value="Obriši" /></p>
+</form>

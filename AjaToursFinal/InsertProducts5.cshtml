@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "InsertProduct5";
+
+
+    var db = Database.Open("StarterSite");
+
+    var UserId = Request.Form["UserId"];
+    var RoleId = Request.Form["RoleId"];
+
+
+    if (IsPost && Validation.IsValid())
+    {
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
+        if (ModelState.IsValid)
+        {
+            var insertQuery = "INSERT INTO webpages_UsersInRoles (UserId, RoleId) " +
+                "VALUES (@0, @1)";
+            db.Execute(insertQuery, UserId, RoleId);
+            // Display the page that lists products.
+            Response.Redirect("~/ListProducts5");
+        }
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Dodaj ulogu</h1>
+@Html.ValidationSummary("")
+
+<form method="post" action="">
+    <fieldset>
+        <legend>Dodaj</legend>
+        <div>
+            <label>Id:</label>
+            <input name="UserId" type="number" value="@UserId" />
+        </div>
+        <div>
+            <label>Uloga:</label>
+            <input name="RoleId" type="number" value="@RoleId" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Dodaj" class="submit" />
+        </div>
+    </fieldset>
+</form>

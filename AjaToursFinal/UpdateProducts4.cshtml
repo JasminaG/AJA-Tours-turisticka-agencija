@@ -1,0 +1,117 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "UpdateProducts4";
+
+
+    var Mail = "";
+    var Telefon = "";
+    var Adresa = "";
+    var Copy = "";
+    var Boja = "";
+    var Logo = "";
+
+
+    var Id = UrlData[0];
+    if (Id.IsEmpty())
+    {
+        Response.Redirect("~/EditProducts4");
+    }
+
+    var db = Database.Open("StarterSite");
+
+    if (IsPost && Validation.IsValid())
+    {
+        var updateQueryString =
+            "UPDATE Footer SET Mail=@0, Telefon=@1, Adresa=@2, Copy=@3, Boja=@4, Logo=@5 WHERE Id=@6";
+
+        Mail = Request["Mail"];
+        Telefon = Request["Telefon"];
+        Adresa = Request["Adresa"];
+        Copy = Request["Copy"];
+        Boja = Request["Boja"];
+        Logo = Request["Logo"];
+
+
+        db.Execute(updateQueryString, Mail, Telefon, Adresa, Copy, Boja, Logo, Id);
+        Response.Redirect(@Href("~/EditProducts4"));
+    }
+    else
+    {
+        var select = "SELECT * FROM Footer WHERE Id=@0";
+
+        var row = db.QuerySingle(select, Id);
+
+        Mail = row.Mail;
+        Telefon = row.Telefon;
+        Adresa = row.Adresa;
+        Copy = row.Copy;
+        Boja = row.Boja;
+        Logo = row.Logo;
+
+    }
+
+}
+<br /><br /><br /><br /><br />
+<title>Dodaj footer:</title>
+<style type="text/css">
+    label {
+        float: left;
+        width: 8em;
+        text-align: right;
+        margin-right: 0.5em;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid;
+        width: 35em;
+    }
+
+    legend {
+        padding: 2px 4px;
+        border: 1px solid;
+        font-weight: bold;
+    }
+
+    .validation-summary-errors {
+        font-weight: bold;
+        color: red;
+        font-size: 11pt;
+    }
+</style>
+
+<h1>Ažuriraj</h1>
+@Html.ValidationSummary("")
+<form method="post" action="">
+    <fieldset>
+        <legend>Ažuriraj footer</legend>
+        <div>
+            <label>Mail:</label>
+            <input name="Mail" type="text" value="@Mail" />
+        </div>
+        <div>
+            <label>Telefon:</label>
+            <input name="Telefon" type="text" value="@Telefon" />
+        </div>
+        <div>
+            <label>Adresa:</label>
+            <input name="Adresa" type="text" value="@Adresa" />
+        </div>
+        <div>
+            <label>Copy:</label>
+            <input name="Copy" type="text" value="@Copy" />
+        </div>
+        <div>
+            <label>Boja:</label>
+            <input name="Boja" type="text" value="@Boja" />
+        </div>
+        <div>
+            <label>Logo:</label>
+            <input name="Logo" type="text" value="@Logo" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Ažuriraj" class="submit" />
+        </div>
+    </fieldset>
+</form>

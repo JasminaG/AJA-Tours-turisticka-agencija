@@ -1,0 +1,98 @@
+﻿@{
+                /**/
+
+                Layout = "~/_SiteLayout.cshtml";
+                Page.Title = "UpdateProducts";
+
+
+                Validation.RequireField("NazivPutovanja", "Naziv je obavezan.");
+                Validation.RequireField("Cijena", "Cijena je obavezna.");
+                Validation.RequireField("DatumKreiranjaPutovanja", "Datum je obavezan.");
+                Validation.RequireField("Polazak", "Polazak je obavezan.");
+                Validation.RequireField("Povratak", "Povratak je obavezan.");
+                Validation.RequireField("StatusPutovanja", "Status putovanja je obavezan.");
+
+
+                var NazivPutovanja = "";
+                var Cijena = Decimal.Zero;
+                var DatumKreiranjaPutovanja = DateTime.Now;
+                var Polazak = DateTime.Now;
+                var Povratak = DateTime.Now;
+                var StatusPutovanja = "";
+
+                var IdPutovanje = UrlData[0];
+                if (IdPutovanje.IsEmpty())
+                {
+                    Response.Redirect("~/EditProducts");
+                }
+
+                var db = Database.Open("StarterSite");
+
+                if (IsPost && Validation.IsValid())
+                {
+                    var updateQueryString =
+                        "UPDATE Putovanje SET NazivPutovanja=@0, Cijena=@1, DatumKreiranjaPutovanja=@2, Polazak=@3, Povratak=@4, StatusPutovanja=@5 WHERE IdPutovanje=@6";
+
+                    NazivPutovanja = Request["NazivPutovanja"];
+                    Cijena = Request["Cijena"].AsDecimal();
+                    DatumKreiranjaPutovanja = Request["DatumKreiranjaPutovanja"].AsDateTime();
+                    Polazak = Request["Polazak"].AsDateTime();
+                    Povratak = Request["Povratak"].AsDateTime();
+                    StatusPutovanja = Request["StatusPutovanja"];
+
+
+                    db.Execute(updateQueryString, NazivPutovanja, Cijena, DatumKreiranjaPutovanja, Polazak, Povratak, StatusPutovanja, IdPutovanje);
+                    Response.Redirect(@Href("~/EditProducts"));
+                }
+                else
+                {
+                    var selectQueryString = "SELECT * FROM Putovanje WHERE IdPutovanje=@0";
+
+                    var row = db.QuerySingle(selectQueryString, IdPutovanje);
+
+                    NazivPutovanja = row.NazivPutovanja;
+                    Cijena = row.Cijena;
+                    DatumKreiranjaPutovanja = row.DatumKreiranjaPutovanja;
+                    Polazak = row.Polazak;
+                    Povratak = row.Povratak;
+                    StatusPutovanja = row.StatusPutovanja;
+
+                }
+
+}
+<br /><br /><br /><br /><br />
+<h1>Ažuriraj</h1>
+@Html.ValidationSummary("")
+<form method="post" action="">
+    <fieldset>
+        <legend>Ažuriraj putovanja</legend>
+        <div>
+            <label>Naziv putovanja:</label>
+            <input name="NazivPutovanja" type="text" value="@NazivPutovanja" />
+        </div>
+        <div>
+            <label>Polazak:</label>
+            <input name="Polazak" type="text" value="@Polazak" />
+        </div>
+        <div>
+            <label>Povratak:</label>
+            <input name="Povratak" type="text" value="@Povratak" />
+        </div>
+        <div>
+            <label>StatusPutovanja:</label>
+            <input name="StatusPutovanja" type="text" value="@StatusPutovanja" />
+        </div>
+        <div>
+            <label>Cijena:</label>
+            <input name="Cijena" type="number" value="@Cijena" />
+        </div>
+        <div>
+            <label>Datum kreiranja:</label>
+            <input name="DatumKreiranjaPutovanja" type="text" value="@DatumKreiranjaPutovanja" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Ažuriraj" class="submit" />
+        </div>
+    </fieldset>
+</form>

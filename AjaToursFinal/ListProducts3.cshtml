@@ -1,0 +1,49 @@
+﻿@{
+                /**/
+
+                Layout = "~/_SiteLayout.cshtml";
+                Page.Title = "ListProduct3";
+
+                var db = Database.Open("StarterSite");
+                var select = "SELECT * FROM Rezervacija ORDER BY IdRezervacija";
+}
+<style>
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h1>Lista rezervacija:</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Email</th>
+            <th>Broj putnika</th>
+            <th>Destinacija</th>
+            <th>Povratak</th>
+            <th>Polazak</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in db.Query(select))
+        {
+            <tr>
+                <td>@row.IdRezervacija</td>
+                <td>@row.ImeKorisnika</td>
+                <td>@row.PrezimeKorisnika</td>
+                <td>@row.Email</td>
+                <td>@row.BrojPutnika</td>
+                <td>@row.Destinacija</td>
+                <td>@row.Povratak</td>
+                <td>@row.Polazak</td>
+                <td>@row.StatusRezervacije</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "DeleteProduct2";
+
+    var db = Database.Open("StarterSite");
+    var UserId = UrlData[0];
+    if (UserId.IsEmpty())
+    {
+        Response.Redirect("~/ListProductsForDelete2");
+    }
+    var prod = db.QuerySingle("SELECT * FROM UserProfile WHERE UserID = @0",UserId);
+    if (IsPost && !UserId.IsEmpty())
+    {
+        var deleteQueryString = "DELETE FROM UserProfile WHERE UserId=@0";
+        db.Execute(deleteQueryString, UserId);
+        Response.Redirect("~/ListProductsForDelete2");
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Potvrda</h1>
+<form method="post" action="" name="form">
+    <p>Jeste li sigurni?</p>
+
+    <p>
+        Id: @prod.UserId <br />
+        Ime: @prod.Email <br />
+        Prezime: @prod.putovanjeID <br />
+    </p>
+    <p><input type="submit" value="Obriši" /></p>
+</form>

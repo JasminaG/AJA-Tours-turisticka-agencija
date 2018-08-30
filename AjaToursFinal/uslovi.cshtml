@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Uslovi";
+    var db = Database.Open("StarterSite");
+    var query = "SELECT * FROM UsloviPutovanja WHERE Id='1'";
+}
+
+@section featured {
+    <br /><br /><br /><br />
+<main class="maincss" id="ramuvjeti">
+    <div class="row" style="text-align:justify">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+            <h3 class="travel-subtitle">Poštovani,</h3><br />
+
+            <strong><p>Uvodna napomena</p></strong><br />
+            @foreach (var row in db.Query(query))
+    {@row.UvodnaNapomena}<br/>
+        <strong> 1. Prijave i ugovaranje</strong><br />
+        @foreach (var row in db.Query(query))
+{@row.PrijaveUgovaranje}<br />
+        <strong>2. Cijena i sadržaj aranžmana</strong><br />
+        @foreach (var row in db.Query(query))
+{@row.CijenaSadrzajAranzmana}<br />
+        <strong>3. Pravo na povišenje cijene i pravo na otkaz zbog povišenja cijena</strong><br />
+        @foreach (var row in db.Query(query))
+{@row.PravoNaPovecanjeCijeneiOtkaza}<br />
+        <strong>4. Putna dokumentacija</strong><br />
+        @foreach (var row in db.Query(query))
+{@row.PutnaDokumentacija}<br />
+        <strong>5. Kategorizacija i opis usluga</strong><br />
+        @foreach (var row in db.Query(query))
+{@row.OpisUsluga}<br />
+        <strong>6. Odustajanje od putovanja</strong><br />
+        @foreach (var row in db.Query(query))
+{@row.OdustajanjeOdPutovanja}<br />
+        </div><br />
+
+        <div class="col-md-5">
+            <strong>7. Otkaz putovanja od strane AJA Tours-a ili promjena programa</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.OtkazivanjePutovanjaOdAJATours}<br />
+            <strong>8. Putne isprave</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.PutneIsprave}<br />
+            <strong>9. Devizni i carinski propisi</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.DevizniiCarinskiPropisi}<br />
+            <strong>10. Zdravstveni propisi</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.ZdravstveniPropisi}<br />
+            <strong>11. Prtljaga</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.Prtljaga}<br />
+            <strong>12. Obveze putnika</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.ObvezePutnika}<br />
+            <strong>13. Zaštita ličnih podataka</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.ZastitaLicnihPodataka}<br />
+            <strong>14. Završne odredbe</strong><br />
+            @foreach (var row in db.Query(query))
+        {@row.ZavrsneOdredbe} <br /><br />
+            
+            <p>Putujte sigurno sa nama, </p><br />
+            <p style="text-align:right">AJA Tours</p>
+        </div>
+        <div class="col-md-1">
+        </div>
+    </div>
+</main>
+
+}

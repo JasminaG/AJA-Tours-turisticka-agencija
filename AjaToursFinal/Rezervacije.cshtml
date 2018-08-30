@@ -1,0 +1,212 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Rezervacije";
+
+    //REZERVACIJA BY AIDA HONDO
+
+    var db = Database.Open("StarterSite");
+    var query = "SELECT * FROM Putovanje where Status=1";
+
+
+
+
+
+    // DEKLARISANJE VARIJABLI
+
+    var ImeKorisnika = "";
+    var PrezimeKorisnika = "";
+    var Email = "";
+    var Destinacija = "";
+    var Polazak = "";
+    var Povratak = "";
+    var BrojPutnika = "";
+    var Komentar = "";
+
+    // PODEŠAVANJE VALIDACIJE OBAVEZNIH POLJA
+
+    Validation.RequireField("ImeKorisnika", "Ime je obavezno.");
+    Validation.RequireField("PrezimeKorisnika", "Prezime je obavezno.");
+    Validation.RequireField("Email", "Email je obavezan.");
+    Validation.RequireField("Destinacija", "Destinacija je obavezna.");
+    Validation.RequireField("Polazak", "Polazak je obavezan.");
+    Validation.RequireField("Povratak", "Povratak je obavezan.");
+    Validation.RequireField("BrojPutnika", "Broj putnika je obavezan.");
+    Validation.RequireField("Komentar", "Komentar je obavezna.");
+
+
+    // If this is a POST request, validate and process data
+    if (IsPost)
+    {
+        AntiForgery.Validate();
+
+        ImeKorisnika = Request["ImeKorisnika"];
+        PrezimeKorisnika = Request["PrezimeKorisnika"];
+        Email = Request["Email"];
+        Destinacija = Request["Destinacija"];
+        Polazak = Request["Polazak"];
+        Povratak = Request["Povratak"];
+        BrojPutnika = Request["BrojPutnika"];
+        Komentar = Request["Komentar"];
+
+        // Validate the user's captcha answer
+        // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
+        //     ModelState.AddError("recaptcha", "Captcha response was not correct");
+        // }
+
+        if (IsPost && Validation.IsValid())
+        {
+            // Define the insert query. The values to assign to the
+            // columns in the Product table are defined as parameters
+            // with the VALUES keyword.
+            if (ModelState.IsValid)
+            {
+                var insertQuery = "INSERT INTO Rezervacija (ImeKorisnika, PrezimeKorisnika, Email, Destinacija, Polazak, Povratak, BrojPutnika, Komentar) " + "VALUES (@0, @1, @2, @3, @4, @5, @6, @7) ";
+                db.Execute(insertQuery, ImeKorisnika, PrezimeKorisnika, Email, Destinacija, Polazak, Povratak, BrojPutnika, Komentar);
+
+                // UKOLIKO JE REZERVACIJA USPJEŠNA, PREUSMJERI NA STRANICU:
+                Response.Redirect("~/PotvrdaRezervacije");
+            }
+        }
+        else
+        {
+            // Greška prilikom ispunjavanja forme
+            ModelState.AddFormError("Morate popuniti sva polja kako bi uspješno kompletirali proces rezervacije");
+        }
+    }
+
+}
+
+@section featured {
+    <br> 
+    @*Ukoliko je korisnik logovan, moze vidjeti formu rezervacije. Ukoliko nije, preusmjerava se na login stranicu.*@
+
+    @if (WebSecurity.IsAuthenticated)
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                <div align="center">
+                    <img src="Slike/logomali.png"><br>
+                </div>
+                <hr>
+                <p class="oNama1">Napravite svoju rezervaciju na vrijeme...</p>
+                <p class="oNama1">Kontaktirat ćemo vas u roku jednog radnog dana kako bi potvrdili rezervaciju i dogovorili sve potrebne detalje. Hvala vam na ukazanom povjerenju!</p>
+
+                <div class="kontaktna" id="kontaktna"></div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="forma1" align="center">
+                    <form method="post" class="forma2">
+                        @AntiForgery.GetHtml()
+                        @* Ukoliko postoji ijedna greska u validaciji, obavjesti korisnika *@
+                        @Html.ValidationSummary("Kreiranje rezervacije je neuspješno. Molimo Vas da pokušate ponovo.", excludeFieldErrors: true, htmlAttributes: null)
+                        <label for="fname">Ime</label>
+                        <input type="text" id="fname" name="ImeKorisnika" placeholder="Vase ime..">
+                        <label for="lname">Prezime</label>
+                        <input type="text" id="lname" name="PrezimeKorisnika" placeholder="Vase prezime..">
+                        <br>
+                        <label for="email">E-mail</label>
+                        <input type="text" id="email" name="Email" placeholder="Vase e-mail..">
+                        <br>
+                        <label for="destination">Destinacija</label>
+                        <select id="destination" name="Destinacija" onchange="destinacije()"> @*funkcija za odabir datuma prilikom odabira destinacije u select meni-ju*@
+                            @foreach (var row in db.Query(query))
+                            {
+                                <option value="Atina">@row.NazivPutovanja</option>
+                            }
+
+
+                        </select>
+                        <br> <br>
+                        <label for="date">Datum putovanja</label>
+                        <br>
+                        <label for="date">Polazak</label>
+                        <input id="fromdate" name="Polazak" value="Polazak"><br>
+                        <label for="date">Povratak</label>
+                        <input id="todate" name="Povratak" value="Povratak"><br>
+
+
+                        <br>
+                        <br>
+                        <label for="personno">Broj osoba</label>
+                        <input type="number" id="personno" name="BrojPutnika" placeholder="Broj osoba..">
+                        <br><br>
+                        <label for="comment">Komentar</label>
+                        <textarea id="comment" name="Komentar" placeholder="Upisite dodatne komentare i napomene..." style="height:100px"></textarea>
+                        <br>
+                        <button type="submit" value="Rezervisi">Rezervisi</button><br>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+}
+else {
+    Response.Redirect("~/Account/Login");
+    return;
+    }
+       
+ 
+
+            @*FUNKCIJA ZA ODABIR DATUMA POLASKA I DOLASKA PRILIKOM ODABIRA DESTINACIJE IZ SELECT MENI-JA*@
+           
+ <script>
+    function destinacije() {
+
+            var destination = document.getElementById('destination').value;
+
+
+
+            switch (destination) {
+                case "Atina":
+                    document.getElementById('fromdate').value = "01/07/2018.";
+                    document.getElementById('todate').value = "08/08/2018";
+                    break;
+
+                case "Bec":
+                    document.getElementById('fromdate').value = "12/08/2018";
+                    document.getElementById('todate').value = "15/08/2018";
+                    break;
+
+                case "Istanbul":
+                    document.getElementById('fromdate').value = "25/07/2018.";
+                    document.getElementById('todate').value = "01/08/2018.";
+                    break;
+
+                case "Kualalumpur":
+                    document.getElementById('fromdate').value = "21/30/2018.";
+                    document.getElementById('todate').value = "21/03/2018.";
+                    break;
+
+                case "Kusadasi":
+                    document.getElementById('fromdate').value = "21/03/2018.";
+                    document.getElementById('todate').value = "21/03/2018.";
+                    break;
+
+                case "Pariz":
+                    document.getElementById('fromdate').value = "29/07/2018";
+                    document.getElementById('todate').value = "02/08/2018";
+                    break;
+
+                case "Rim":
+                    document.getElementById('fromdate').value = "09/08/2018";
+                    document.getElementById('todate').value = "12/08/2018";
+                    break;
+
+                case "Toskana":
+                    document.getElementById('fromdate').value = "01/08/2018";
+                    document.getElementById('todate').value = "05/08/2018";
+                    break;
+
+                default: document.getElementById('fromdate').value = "Destinacija ne  postoji";
+                    break;
+
+            }
+        }
+        </script>
+
+    }

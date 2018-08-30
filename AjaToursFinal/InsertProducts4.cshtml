@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "InsertProduct4";
+
+
+    var db = Database.Open("StarterSite");
+
+    var Id = Request.Form["Id"];
+    var Mail = Request.Form["Mail"];
+    var Telefon = Request.Form["Telefon"];
+    var Adresa = Request.Form["Adresa"];
+    var Copy = Request.Form["Copy"];
+    var Boja = Request.Form["Boja"];
+    var Logo = Request.Form["Logo"];
+
+    if (IsPost && Validation.IsValid())
+    {
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
+        if (ModelState.IsValid)
+        {
+            var insertQuery = "INSERT INTO Footer (Id, Mail, Telefon, Adresa, Copy, Boja, Logo) " +
+                "VALUES (@0, @1, @2, @3, @4, @5, @6)";
+            db.Execute(insertQuery, Id, Mail, Telefon, Adresa, Copy, Boja, Logo);
+            // Display the page that lists products.
+            Response.Redirect("~/ListProducts4");
+        }
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Dodaj rezervaciju</h1>
+@Html.ValidationSummary("")
+
+<form method="post" action="">
+    <fieldset>
+        <legend>Dodaj</legend>
+        <div>
+            <label>Id:</label>
+            <input name="Id" type="text" value="@Id" />
+        </div>
+        <div>
+            <label>Mail:</label>
+            <input name="Mail" type="text" value="@Mail" />
+        </div>
+        <div>
+            <label>Telefon:</label>
+            <input name="Telefon" type="text" value="@Telefon" />
+        </div>
+        <div>
+            <label>Adresa:</label>
+            <input name="Adresa" type="text" value="@Adresa" />
+        </div>
+        <div>
+            <label>Copy:</label>
+            <input name="Copy" type="text" value="@Copy" />
+        </div>
+        <div>
+            <label>Boja:</label>
+            <input name="Boja" type="text" value="@Boja" />
+        </div>
+        <div>
+            <label>Logo:</label>
+            <input name="Logo" type="text" value="@Logo" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Dodaj" class="submit" />
+        </div>
+    </fieldset>
+</form>

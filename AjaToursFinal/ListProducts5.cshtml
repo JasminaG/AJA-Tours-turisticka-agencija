@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "ListProducts5";
+
+    var db = Database.Open("StarterSite");
+    var uloge = "SELECT * FROM webpages_UsersInRoles";
+}
+<style>
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h6><a href="~/admin">Povratak nazad</a></h6>
+<br />
+<h1>Uloge:</h1>
+<table>
+    <thead>
+        <tr>
+            <th>User Id</th>
+            <th>Uloga Id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in db.Query(uloge))
+        {
+            <tr>
+                <td>@row.UserId</td>
+                <td>@row.RoleId</td>
+            </tr>
+        }
+    </tbody>
+</table>

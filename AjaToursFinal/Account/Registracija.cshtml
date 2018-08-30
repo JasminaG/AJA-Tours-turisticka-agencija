@@ -1,0 +1,247 @@
+﻿@* Remove this section if you are using bundling *@
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+    <meta name="google-signin-client_id" content="694187545562-ad7r7nc69ja0lp73547qkgjq3895odsm.apps.googleusercontent.com">https://apis.google.com/js/platform.js
+
+    @*REGISTRACIJA FACEBOOK I GOOGLE BY AIDA HONDO*@
+
+    <script>
+        //LOGIN ZA FACEBOOK gdje se unosi appID koji se dobije registracijom na Facebook kao developer
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1614778061966813',
+                autoLogAppEvents: true,
+                xfbml: true,
+                version: 'v3.0'
+            });
+        };
+
+        // funkcija za registraciju preko Facebooka uz koju je potrebno dodatno instalirati i facebook nuget
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+
+        //Google get profile information
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        }
+
+        //funkcija za uspjesnu prijavu preko Google-a
+        function onSuccess(googleUser) {
+            console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+        }
+        //funkcija za gresku prilikom prijave
+        function onFailure(error) {
+            console.log(error);
+        }
+        function renderButton() {
+            gapi.signin2.render('my-signin2', {
+                'scope': 'profile email',
+                'width': 240,
+                'height': 50,
+                'longtitle': true,
+                'theme': 'dark',
+                'onsuccess': onSuccess,
+                'onfailure': onFailure
+            });
+        }
+
+    </script>
+}
+
+
+@{
+    <br /><br /><br /><br /><br /><br />
+
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Registracija";
+
+    // Initialize general page variables
+    var email = "";
+    var password = "";
+    var confirmPassword = "";
+
+    // Setup validation
+    Validation.RequireField("email", "Morate upisati vašu email adresu.");
+    Validation.RequireField("password", "Password mora biti unijet.");
+    Validation.Add("confirmPassword",
+        Validator.EqualsTo("password", "Password i potvrda passworda nisu identični."));
+    Validation.Add("password",
+        Validator.StringLength(
+            maxLength: Int32.MaxValue,
+            minLength: 6,
+            errorMessage: "Password mora sadržati najmanje 6 karaktera"));
+
+    // If this is a POST request, validate and process data
+    if (IsPost)
+    {
+        AntiForgery.Validate();
+        email = Request.Form["email"];
+        password = Request.Form["password"];
+        confirmPassword = Request.Form["confirmPassword"];
+
+        // Validate the user's captcha answer
+        // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
+        //     ModelState.AddError("recaptcha", "Captcha response was not correct");
+        // }
+
+        // If all information is valid, create a new account
+        if (Validation.IsValid())
+        {
+            // Insert a new user into the database
+            var db = Database.Open("StarterSite");
+
+            // Check if user already exists
+            var user = db.QuerySingle("SELECT Email FROM UserProfile WHERE LOWER(Email) = LOWER(@0)", email);
+            if (user == null)
+            {
+                // Insert email into the profile table
+                db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+
+                // Create and associate a new entry in the membership database.
+                // If successful, continue processing the request
+                try
+                {
+                    bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
+                    var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
+                    if (requireEmailConfirmation)
+                    {
+                        var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                        var confirmationUrl = hostUrl + VirtualPathUtility.ToAbsolute("~/Account/Confirm?confirmationCode=" + HttpUtility.UrlEncode(token));
+
+                        WebMail.Send(
+                            to: email,
+                            subject: "Potvrdite vaš account",
+                            body: "Vaš potvrdni kod je: " + token + ". Posjetite <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> kako biste aktivirali vaš account."
+                        );
+                    }
+
+                    if (requireEmailConfirmation)
+                    {
+                        // Thank the user for registering and let them know an email is on its way
+                        Response.Redirect("~/Account/Thanks");
+                    }
+                    else
+                    {
+                        // Navigate back to the homepage and exit
+                        WebSecurity.Login(email, password);
+
+                        Response.Redirect("~/");
+                    }
+                }
+                catch (System.Web.Security.MembershipCreateUserException e)
+                {
+                    ModelState.AddFormError(e.Message);
+                }
+            }
+            else
+            {
+                // User already exists
+                ModelState.AddFormError("Unijeta email adresa je već u upotrebi.");
+            }
+        }
+    }
+}
+
+@section featured {
+    <br /><br /><br /><br /><br /><br />
+    <div class="content">
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div align="center">
+                    <img src="Slike/logomali.png"><br>
+                </div><hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+
+                <section id="loginForm">
+                    <form method="post">
+                        @AntiForgery.GetHtml()
+                        @* If at least one validation error exists, notify the user *@
+                        @Html.ValidationSummary("Kreiranje korisničkog računa je neuspješno. Molimo Vas da pokušate ponovo.", excludeFieldErrors: true, htmlAttributes: null)
+
+                        <fieldset>
+                            <legend>Registracijski račun</legend>
+                            <ol>
+                                <li>
+                                    <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text> }>Email adresa</label>
+                                    <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
+                                    @* Write any email validation errors to the page *@
+                                    @Html.ValidationMessage("email")
+                                </li>
+                                <li class="password">
+                                    <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text> }>Password</label>
+                                    <input type="password" id="password" name="password" @Validation.For("password") />
+                                    @* Write any password validation errors to the page *@
+                                    @Html.ValidationMessage("password")
+                                </li>
+                                <li class="confirm-password">
+                                    <label for="confirmPassword" @if (!ModelState.IsValidField("confirmPassword")) { <text> class="error-label" </text> }>Potvrda passworda</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" @Validation.For("confirmPassword") />
+                                    @* Write any password validation errors to the page *@
+                                    @Html.ValidationMessage("confirmPassword")
+                                </li>
+                                <li class="recaptcha">
+                                    @*<div class="message-info">
+                                            <p>
+                                                To enable CAPTCHA verification, <a href="https://go.microsoft.com/fwlink/?LinkId=204140">
+                                                    install the
+                                                    ASP.NET Web Helpers Library
+                                                </a> and uncomment ReCaptcha.GetHtml and replace 'PUBLIC_KEY'
+                                                with your public key. At the top of this page, uncomment ReCaptcha. Validate and
+                                                replace 'PRIVATE_KEY' with your private key.
+                                                Register for reCAPTCHA keys at <a href="http://recaptcha.net">reCAPTCHA.net</a>.
+                                            </p>
+                                        </div>*@
+                                    @*
+                                        @ReCaptcha.GetHtml("PUBLIC_KEY", theme: "white")
+                                        @Html.ValidationMessage("recaptcha")
+                                    *@
+                                </li>
+                            </ol>
+                            <button class="button button5 btn-sucess" type="submit" value="Registriraj se">Registriraj se</button>
+                        </fieldset>
+                    </form>
+                </section>
+            </div>
+            <div class="col-sm-6">
+
+                <br /><br />
+                <section>
+
+                    <p class="oNama1">Niste registrovani?</p>
+                    <p class="oNama1">Registrujte se preko već postojećeg računa na Facebook ili Google servisima</b></p>
+                    <hr>
+                </section>
+                <section class="social" id="socialLoginForm">
+                    @*Facebook Login Button*@
+                    <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                    <br />
+                    <br />
+                    @*Google Login Button*@
+                    <div id="my-signin2"></div>
+
+
+
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+}

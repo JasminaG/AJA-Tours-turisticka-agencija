@@ -1,0 +1,80 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "UpdateProducts2";
+
+    var Email = "";
+    var putovanjeID = "";
+
+
+    var UserId = UrlData[0];
+    if (UserId.IsEmpty())
+    {
+        Response.Redirect("~/EditProducts2");
+    }
+
+    var db = Database.Open("StarterSite");
+
+    if (IsPost && Validation.IsValid())
+    {
+        var updateQuery =
+            "UPDATE UserProfile SET Email=@0, putovanjeID=@1, WHERE UserId=@2";
+        Email = Request["Email"];
+        putovanjeID = Request["putovanjeID"];
+
+        db.Execute(updateQuery, Email, putovanjeID, UserId);
+        Response.Redirect(@Href("~/EditProducts2"));
+    }
+    else
+    {
+        var selectQuery = "SELECT * FROM UserProfile WHERE UserId=@0";
+
+        var row = db.QuerySingle(selectQuery, UserId);
+        Email = row.Email;
+        putovanjeID = row.putovanjeID;
+    }
+
+}
+<br /><br /><br /><br /><br />
+<title>Dodaj korisnika:</title>
+<style type="text/css">
+    label {
+        float: left;
+        width: 8em;
+        text-align: right;
+        margin-right: 0.5em;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid;
+        width: 35em;
+    }
+
+    legend {
+        padding: 2px 4px;
+        border: 1px solid;
+        font-weight: bold;
+    }
+
+    .validation-summary-errors {
+        font-weight: bold;
+        color: red;
+        font-size: 11pt;
+    }
+</style>
+
+<h1>Ažuriraj</h1>
+@Html.ValidationSummary("")
+<form method="post" action="">
+    <fieldset>
+        <legend>Ažuriraj korisnika</legend>
+        <div>
+            <label>Email:</label>
+            <input name="Email" type="text" value="@Email" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Ažuriraj" class="submit" />
+        </div>
+    </fieldset>
+</form>

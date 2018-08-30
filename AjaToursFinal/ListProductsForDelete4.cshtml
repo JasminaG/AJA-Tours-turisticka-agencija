@@ -1,0 +1,60 @@
+﻿@{
+                /**/
+
+                Layout = "~/_SiteLayout.cshtml";
+                Page.Title = "ListProductsForDelete4";
+
+                var db = Database.Open("StarterSite");
+                var select = "SELECT * FROM Footer ORDER BY Id";
+}
+
+<style>
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+        background-color: white;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h6><a href="~/admin">Povratak nazad</a></h6>
+<br />
+<h1>Izbriši podatke</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <form method="post" action="" name="form">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Id</th>
+                            <th>Mail</th>
+                            <th>Adresa</th>
+                            <th>Telefon</th>
+                            <th>Copy</th>
+                            <th>Boja</th>
+                            <th>Logo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in db.Query(select))
+                        {
+                            <tr>
+                                <td><a href="@Href("~/DeleteProduct4", row.Id)">Obriši</a></td>
+                                <td>@row.Id</td>
+                                <td>@row.Mail</td>
+                                <td>@row.Adresa</td>
+                                <td>@row.Telefon</td>
+                                <td>@row.Copy</td>
+                                <td>@row.Boja</td>
+                                <td>@row.Logo</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>

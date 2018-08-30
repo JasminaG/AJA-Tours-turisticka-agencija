@@ -1,0 +1,78 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "InsertProducts";
+
+    Validation.RequireField("IdPutovanje", "ID je obavezan.");
+    Validation.RequireField("NazivPutovanja", "Naziv je obavezan.");
+    Validation.RequireField("Cijena", "Cijena je obavezna.");
+    Validation.RequireField("DatumKreiranjaPutovanja", "Datum je obavezan.");
+    Validation.RequireField("Polazak", "Polazak je obavezan.");
+    Validation.RequireField("Povratak", "Povratak je obavezan.");
+    Validation.RequireField("StatusPutovanja", "Status putovanja je obavezan.");
+
+    var db = Database.Open("StarterSite");
+
+    var IdPutovanje = Request.Form["IdPutovanje"];
+    var NazivPutovanja = Request.Form["NazivPutovanja"];
+    var Cijena = Request.Form["Cijena"];
+    var DatumKreiranjaPutovanja = Request.Form["DatumKreiranjaPutovanja"];
+    var Polazak = Request.Form["Polazak"];
+    var Povratak = Request.Form["Povratak"];
+    var StatusPutovanja = Request.Form["StatusPutovanja"];
+
+    if (IsPost && Validation.IsValid())
+    {
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
+        if (ModelState.IsValid)
+        {
+            var insertQuery = "INSERT INTO Putovanje (IdPutovanje, NazivPutovanja, Cijena, DatumKreiranjaPutovanja, Polazak, Povratak, StatusPutovanja) " +
+                "VALUES (@0, @1, @2, @3, @4, @5, @6)";
+            db.Execute(insertQuery, IdPutovanje, NazivPutovanja, Cijena, DatumKreiranjaPutovanja, Polazak, Povratak, StatusPutovanja);
+            // Display the page that lists products.
+            Response.Redirect("~/ListProducts");
+        }
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Dodaj putovanje</h1>
+@Html.ValidationSummary("Greška, napomena:")
+
+<form method="post" action="">
+    <fieldset>
+        <legend>Dodaj</legend>
+        <div>
+            <label>Id:</label>
+            <input name="IdPutovanje" type="text" value="@IdPutovanje" />
+        </div>
+        <div>
+            <label>Naziv putovanja:</label>
+            <input name="NazivPutovanja" type="text" value="@NazivPutovanja" />
+        </div>
+        <div>
+            <label>Polazak:</label>
+            <input name="Polazak" type="text" value="@Polazak" />
+        </div>
+        <div>
+            <label>Povratak:</label>
+            <input name="Povratak" type="text" value="@Povratak" />
+        </div>
+        <div>
+            <label>Status putovanja:</label>
+            <input name="StatusPutovanja" type="text" value="@StatusPutovanja" />
+        </div>
+        <div>
+            <label>Cijena:</label>
+            <input name="Cijena" type="number" value="@Cijena" />
+        </div>
+        <div>
+            <label>Datum kreiranja:</label>
+            <input name="DatumKreiranjaPutovanja" type="datetime" value="@DatumKreiranjaPutovanja" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Dodaj" class="submit" />
+        </div>
+    </fieldset>
+</form>

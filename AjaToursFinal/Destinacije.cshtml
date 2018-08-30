@@ -1,0 +1,227 @@
+﻿@{
+    /**/
+
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Destinacije";
+
+    var db = Database.Open("StarterSite");
+    var query = "SELECT * FROM Putovanje where Status=1";
+    var myPath = UrlData;
+
+}
+
+@section featured {
+<section>
+    <br /><br />
+    <main class="maincss">
+        <br /><br /><br />
+        <div class="content">
+
+            @*Cetiri razloga zasto da putujete sa nama - CSS Template koji je prilagodjen potrebama Jasmina *@
+
+            <div class="w3-display-container" style="margin-bottom:50px">
+                <img src="~/Slike/plaza1.jpeg" style="width:100%">
+                <div class="w3-display-bottomleft w3-container w3-amber w3-hover-orange w3-hide-small"
+                     style="border-bottom-right-radius:10%;opacity:0.7;width:35%">
+                    <strong>
+                        <a style="text-align:end">
+
+                            @* kod ANGULAR JS za ispisivanje vremena i datuma Jasmina *@
+
+                            @{var greetingMessage = @DateTime.Now;
+                            }
+                            @greetingMessage
+                        </a>
+
+                    </strong>
+                    <h2><b>4 dobra razloga zašto da putujete sa AJA Tours-om!</b></h2>
+                </div>
+            </div>
+
+            @*<p>The URL to this page is: @myPath</p>*@
+            <div class="w3-row w3-container" style="margin:50px 0">
+
+                <div class="w3-half w3-container">
+                    <div class="w3-topbar w3-border-amber">
+                        <img src="~/Slike/plaza.jpeg" style="width:100%">
+                        <h2>Zdrav odmor!</h2>
+                        <p>Potpuna posvećenost vašoj relaksaciji, daleko od mobilnih telefona!</p>
+                    </div>
+
+                    <div class="w3-topbar w3-border-orange">
+                        <img src="~/Slike/plaza6.jpeg" style="width:100%">
+                        <h2>Super ponude!</h2>
+                        <p>Povoljne cijene. Zadovoljni klijenti!</p>
+                    </div>
+                </div>
+
+                <div class="w3-half w3-container">
+                    <div class="w3-topbar w3-border-orange">
+                        <img src="~/Slike/plaza4.jpeg" style="width:100%">
+                        <h2>Garantiramo nezaboravan provod!</h2>
+                        <p>Gdje god da putujete sa AJA-om!</p>
+                    </div>
+
+                    <div class="w3-topbar w3-border-orange">
+                        <img src="~/Slike/plaza8.jpeg" style="width:100%">
+                        <h2>Realizirajte Vaše snove!</h2>
+                        <p>Ne čekajte, dok nije prekasno!</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="text-align:center"> <strong> PONUDA LJETOVANJA ZA 2018.</strong></h2><br />
+
+            @* Container za neogranicen broj dodavanja/uklanjanja destinacija/putovanja uradjen preko Bootstrapa i
+                .Net Razor 3 metoda za vracanje informacija iz Baze podataka Jasmina*@
+
+            <div class="content travel-home">
+                <div class="container">
+                    <div class="row">
+                        @{
+                            foreach (var row in db.Query(query))
+                            {
+                                <!-- End.Substract izracunava od datuma povratka do datuma polaska koji je broj dana putovanja - .NET Jasmina -->
+
+                                DateTime end = @row.Povratak;
+                                DateTime now = @row.Polazak;
+                                TimeSpan diff = end.Subtract(now);
+
+                                <div class="col-lg-6 col-md-4 col-sm-6 travel-item" id="ram">
+                                    <div class="imgwrap">
+                                        <img class="img-responsive" src="slike/@row.Slika">
+                                        <h3>@row.NazivPutovanja</h3>
+                                    </div>
+                                    <p class="descr">
+                                        <strong>@diff.TotalDays dana</strong>
+                                        <em>@row.Polazak.Date.ToString("dd.MM.yyyy") - @row.Povratak.Date.ToString("dd.MM.yyyy")</em>
+                                    </p>
+                                    <p class="price clearfix" />
+                                    <em>Cijena od</em>
+                                    <strong>@row.Cijena <i>KM</i></strong>
+                                    <!-- Trigger/Open The Modal -->
+                                    <button id="myBtn"><a href="@row.url">Više informacija</a></button>
+                                    <div id="myModal" class="modal">
+                                        <!-- Modal content -->
+                                        <div class="modal-content">
+                                            <span class="close">&times;</span>
+                                            <div class="subpage-header travelish">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h2>@row.NazivPutovanja</h2>
+                                                            <h1 style="text-align:center">Putujte s nama...</h1><br>
+                                                        </div>
+                                                    </div><!-- row -->
+                                                </div><!-- container -->
+                                            </div><!-- subpage-header -->
+                                            <div class="container travelish">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <img class="mySlides" src="slike/@row.SliderS1" style="width:50%">
+                                                        <img class="mySlides" src="slike/@row.SliderS2" style="width:50%">
+                                                        <img class="mySlides" src="slike/@row.SliderS3" style="width:50%">
+                                                        <img class="mySlides" src="slike/@row.SliderS4" style="width:50%">
+                                                        <img class="mySlides" src="slike/@row.SliderS5" style="width:50%">
+                                                        <img class="mySlides" src="slike/@row.SliderS6" style="width:50%">
+                                                        <img class="mySlides" src="slike/@row.SliderS7" style="width:50%">
+                                                    </div>
+                                                    <script>
+                                                        var myIndex = 0;
+                                                        carousel();
+                                                        function carousel() {
+                                                            var i;
+                                                            var x = document.getElementsByClassName("mySlides");
+                                                            for (i = 0; i < x.length; i++) {
+                                                                x[i].style.display = "none";
+                                                            }
+                                                            myIndex++;
+                                                            if (myIndex > x.length) { myIndex = 1 }
+                                                            x[myIndex - 1].style.display = "block";
+                                                            setTimeout(carousel, 3000); // slike se mijenjaju svako tri sekunde
+                                                        }
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="travel-box">
+                                                    <div class="col-md-2-col-md-8-col-md-2">
+                                                        <br>
+                                                        <p class="descr">
+                                                            <em>@row.Polazak.Date.ToString("dd.MM.yyyy") - @row.Povratak.Date.ToString("dd.MM.yyyy")</em>
+                                                        </p>
+                                                        <em>Cijena od</em>
+                                                        <strong>@row.Cijena <i>KM</i></strong>
+                                                        <strong>@diff.TotalDays dana</strong>
+                                                    </div>
+                                                </div><!-- travel-box -->
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h3 class="travel-subtitle">@row.programPutovanja</h3>
+                                                    <p>@row.p1 &nbsp;</p>
+                                                    <p>@row.p2 &nbsp;</p>
+                                                    <p>@row.p3 &nbsp;</p>
+                                                    <p>@row.p4&nbsp;</p>
+                                                    <h3 class="travel-subtitle">@row.p5</h3>
+                                                    <p><strong>@row.p6</strong></p>
+                                                    <ul>
+                                                        <li>@row.p7</li>
+                                                        <li>@row.p8</li>
+                                                        <li>@row.p9</li>
+                                                    </ul>
+                                                    <p><strong>@row.p10</strong></p>
+                                                    <ul>
+                                                        <li>@row.p11</li>
+                                                        <li>@row.p12</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-4 col-sm-6">
+                                                <a class="travel-item all" href="~/destinacije" id="svaputovanja">
+                                                    <strong>Sva putovanja<span class="glyphicon glyphicon-chevron-right " aria-hidden="true"></span></strong>
+                                                </a>
+                                            </div><br><br><br>
+                                            <div class="bgimg">
+                                                <div class="middle">
+                                                    <h1>Ponuda koja se ne propušta!</h1><hr>
+                                                    <p id="demo" style="font-size:30px"></p><br />
+                                                </div>
+                                            </div><br />
+                                            <script>
+                                                // Postavljanje datuma do kojeg ce odbrojavati
+                                                var countDownDate = new Date("July 01, 2018 00:00:00").getTime();
+                                                // Update svake sekunde
+                                                var countdownfunction = setInterval(function () {
+                                                    // Postavka danasnjeg datuma
+                                                    var now = new Date().getTime();
+                                                    // Razlika vremena izmedju vremena sada i do zadnjeg dana
+                                                    var distance = countDownDate - now;
+                                                    // Vrijeme proracun za dane, sate, minute i sekunde
+                                                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                                                    // Povratni rezultat iz id="demo"
+                                                    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+                                                        + minutes + "m " + seconds + "s ";
+                                                    // Ukoliko je odbrojavanje zavrseno, pisat ce ISTEKLA PONUDA
+                                                    if (distance < 0) {
+                                                        clearInterval(countdownfunction);
+                                                        document.getElementById("demo").innerHTML = "ISTEKLA PONUDA";
+                                                    }
+                                                }, 1000);
+                                            </script>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    </div><!-- kraj row/a -->
+                </div><!-- kraj glavnog container -->
+            </div>
+        </div>
+    </main><!--  kraj glavnog dijela JASMINA  -->
+</section>
+}

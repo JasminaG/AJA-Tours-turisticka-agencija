@@ -1,0 +1,49 @@
+﻿@{
+    /**/
+
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "EditProduct5";
+
+    var db = Database.Open("StarterSite");
+    var selectQuery = "SELECT * FROM webpages_UsersInRoles";
+
+}
+
+<style type="text/css">
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+        background-color: white;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h6><a href="~/admin">Povratak nazad</a></h6>
+<br />
+<h1>Izmjeni uloge:</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <table>
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Id</th>
+                        <th>Uloga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in db.Query(selectQuery))
+                    {
+                        <tr>
+                            <td><a href="@Href("~/UpdateProducts5", row.UserId)">Uredi</a></td>
+                            <td>@row.UserId</td>
+                            <td>@row.RoleId</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

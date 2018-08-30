@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "ListProduct4";
+
+    var db = Database.Open("StarterSite");
+    var izbor = "SELECT * FROM Footer ORDER BY Id";
+}
+<style>
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h6><a href="~/admin">Povratak nazad</a></h6>
+<br />
+<h1>Lista podataka:</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Mail</th>
+            <th>Telefon</th>
+            <th>Adresa</th>
+            <th>Copyright</th>
+            <th>Boja</th>
+            <th>Logo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in db.Query(izbor))
+        {
+            <tr>
+                <td>@row.Id</td>
+                <td>@row.Mail</td>
+                <td>@row.Telefon</td>
+                <td>@row.Adresa</td>
+                <td>@row.Copy</td>
+                <td>@row.Boja</td>
+                <td>@row.Logo</td>
+            </tr>
+        }
+    </tbody>
+</table>

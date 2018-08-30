@@ -1,0 +1,29 @@
+﻿@{
+    // Set the layout page and page title
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "PotvrdaRezervacije";
+}
+
+
+@*POTVRDA REZERVACIJE BY AIDA HODNO*@
+
+<fieldset>
+
+    <hgroup class="title oNama1">
+        <h1>@Page.Title.</h1>
+        <h2>Čestitamo!</h2>
+    </hgroup>
+
+    <p class="oNama1">
+        <i>Vaša rezervacija je napravljenja. U roku od jednog radnog dana ćemo Vas kontaktirati i dogovoriti detalje rezervacije. Hvala na povjerenju!</i>
+    </p>
+
+</fieldset>
+
+
+@*FUNKCIJA ZA PREUSMJERAVANJE NA INDEX STRANICU 4 SEC NAKON POTVRDE REZERVACIJE BY AIDA HONDO*@
+<script>
+    window.setTimeout(function () {
+        window.location.href = 'Default';
+    }, 4000);
+</script>

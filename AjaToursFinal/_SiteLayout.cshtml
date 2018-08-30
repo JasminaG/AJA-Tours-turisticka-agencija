@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@Page.Title</title>
+    <link href="~/Content/themes/base/jquery.ui.all.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="~/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="~/hover.css">
+    <link rel="stylesheet" type="text/css" href="~/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.10.3.js"></script>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="~/funkcije.js"></script>
+    <script src="~/funkcijeJasmina.js"></script>
+    <script src="~/form.js"></script>
+</head>
+<body>
+    <style>
+        body {
+            background-color: #fff;
+        }
+    </style>
+    @{
+        var db = Database.Open("StarterSite");
+        var izbor = "SELECT * FROM Footer where Id=1";
+        var lista = "SELECT * FROM Putovanje where Status=1";
+    }
+    <header>
+
+        <div class="w3-top w3-@foreach (var row in db.Query(izbor)) {@row.Boja}">
+            <div class="w3-bar slova">
+               <div class="row" style="margin-left:15px; margin-right:20px; margin-top:15px;">
+                    <div class="col-sm-3">
+                       <a href="~/Default"><img src="~/Slike/@foreach (var row in db.Query(izbor)) {@row.Logo}.png"></a>
+                    </div>
+                    <div class="col-sm-9" id="menu">
+                        <a href="~/onama" class="w3-bar-item w3-button">O nama</a>
+                        <a href="~/destinacije" class="w3-bar-item w3-button">Destinacije</a>
+                        <a href="~/katalog" class="w3-bar-item w3-button">Katalozi</a>
+                        <a href="~/rezervacije" class="w3-bar-item w3-button">Rezervacije</a>
+                        <a href="~/uslovi" class="w3-bar-item w3-button">Uslovi putovanja</a>
+                        <a href="~/Kontakt" class="w3-bar-item w3-button">Kontakt</a>
+                        @if (Roles.IsUserInRole("Admin"))
+                        {
+                            <a href="~/admin" class="w3-bar-item w3-button glyphicon glyphicon-wrench" style="display:block"></a> <!--id="admin"--> }
+                        else
+                        {<a href="~/admin" class="w3-bar-item w3-button glyphicon glyphicon-wrench" style="display:none"></a> <!--id="admin"-->}
+                        <!--id="admin"-->
+                        <div class="div1 w3-blue">
+                            <section id="login">
+                                @if (WebSecurity.IsAuthenticated)
+                                {
+                                    <text>
+                                        Dobrodošli, <a class="email" href="~/Account/Manage" title="Manage">@WebSecurity.CurrentUserName</a>!
+                                        <form id="logoutForm" action="~/Account/Logout" method="post">
+                                            @AntiForgery.GetHtml()
+                                            <a href="javascript:document.getElementById('logoutForm').submit()">Odjava</a>
+                                        </form>
+                                    </text>
+                                }
+                                else
+                                {
+                                    <ul>
+                                        <li><a href="~/Account/Registracija.cshtml">Registracija</a></li>
+                                        <li><a href="~/Account/Login.cshtml">Prijava</a></li>
+                                    </ul>
+                                }
+                            </section>
+                        </div>
+                        <span class="glyphicon glyphicon-search pretraga" style="font-size:18px;cursor:pointer;" onclick="openNav()"> Pretraga </span>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <hr><br>
+
+        <div id="mySidenav" class="sidenav w3-@foreach (var row in db.Query(izbor)) {@row.Boja}">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            
+            <div ng-app="NGapp" ng-controller="NGcontroller">
+                <font color="dodgerblue">
+                <input type="text" placeholder="Pretražite destinacije.." title="Type in a name" ng-model="searchDepartment " /></font>
+                <table>
+                    <tr ng-repeat="dept in depts | filter:searchDepartment">                     
+                            <td>
+                            <a class="bela" href="{{dept.url}}">{{dept.name}}</a>
+                            </td>
+                    </tr>
+                </table>
+            </div>            
+        
+        </div>
+    </header><hr>
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section>
+            @RenderBody()
+        </section>
+    </div>
+    <footer class="w3-@foreach (var row in db.Query(izbor)) {@row.Boja}">
+        <p class="glyphicon glyphicon-triangle-top"><a href="#" title="Povratak na vrh stranice"> Povratak na vrh</a></p>
+
+        <div class="row" style="margin-left:15px; margin-right:5px;">
+            <div class="col-sm-6 dno" style="text-align: center">
+                <a href="https://www.google.ba/maps/place/Trg+oslobo%C4%91enja+-+Alija+Izetbegovi%C4%87+1,+Sarajevo+71000/&#64;43.8585733,18.4251908,17z/data=!4m5!3m4!1s0x4758c8cf6870ff55:0x882a36124e9d0526!8m2!3d43.8585888!4d18.4247187?hl=en" target="blank">
+                    <img src="Slike/mapa.png" id="slika">
+                </a>
+            </div>
+            <div class="col-sm-6 dno w3-@foreach (var row in db.Query(izbor)) {@row.Boja} " style="text-align: center;">
+                <img src="Slike/@foreach (var row in db.Query(izbor)) {@row.Logo}.png">
+                <hr>
+                <p>Trebate pomoć? Ne ustručavajte se kontaktirati nas.</p>
+                Pošaljite nam poruku <span><a href="mailto:ajatours.2018@gmail.com"> @foreach (var row in db.Query(izbor)) {@row.Mail} </a></span><img src="Slike/pismo.png" style="width: 30px;">
+                 <p class="slika1">Pozovite nas na broj @foreach (var row in db.Query(izbor)) {@row.Telefon}  &nbsp; <img src="Slike/tel.png" style="width: 25px;"></p>
+                <p> @foreach (var row in db.Query(izbor)) {@row.Adresa} </p>
+            </div>
+        </div><br>
+              <p style="text-align: center" class="w3-@foreach (var row in db.Query(izbor)) {@row.Boja}">
+                  @foreach (var row in db.Query(izbor)) {@row.Copy} &copy; 2018 All Rights Reserved
+              </p><br>
+    </footer>
+    @RenderSection("Scripts", required: false)
+   
+    <!--Funkcija-pretraga_Almir-->
+    <script>
+        var app = angular.module("NGapp", []);
+        app.controller("NGcontroller", function ($scope) {
+            $scope.depts = [];
+           @foreach (var row in db.Query(lista))
+            {
+                <text> $scope.depts.push({ name: '@row.NazivPutovanja', url: '@row.url'});  </text>
+            }
+        });
+
+        /* Slideshow- index by Aida Hondo*/
+        var slideIndex = 0;
+        showSlides();
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("dot");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1 }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+            setTimeout(showSlides, 3000); // Change image every 2 seconds
+        }
+/*jQuery efekti na index stranici-ponude*/
+    </script>
+</body>
+</html>

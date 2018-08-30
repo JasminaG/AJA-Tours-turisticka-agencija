@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "UpdateProducts3";
+
+
+    var ImeKorisnika = "";
+    var PrezimeKorisnika = "";
+    var Email = "";
+    var Destinacija = "";
+    var Povratak = "";
+    var Polazak = "";
+    var StatusRezervacije = "";
+
+    var IdRezervacija = UrlData[0];
+    if (IdRezervacija.IsEmpty())
+    {
+        Response.Redirect("~/EditProducts3");
+    }
+
+    var db = Database.Open("StarterSite");
+
+    if (IsPost && Validation.IsValid())
+    {
+        var updateQueryString =
+            "UPDATE Rezervacija SET ImeKorisnika=@0, PrezimeKorisnika=@1, Email=@2, Destinacija=@3, Povratak=@4, Polazak=@5, StatusRezervacije=@6 WHERE IdRezervacija=@7";
+
+        ImeKorisnika = Request["ImeKorisnika"];
+        PrezimeKorisnika = Request["PrezimeKorisnika"];
+        Email = Request["Email"];
+        Destinacija = Request["Destinacija"];
+        Povratak = Request["Povratak"];
+        Polazak = Request["Polazak"];
+        StatusRezervacije = Request["StatusRezervacije"];
+
+        db.Execute(updateQueryString, ImeKorisnika, PrezimeKorisnika, Email, Destinacija, Povratak, Polazak, StatusRezervacije, IdRezervacija);
+        Response.Redirect(@Href("~/EditProducts3"));
+    }
+    else
+    {
+        var select = "SELECT * FROM Rezervacija WHERE IdRezervacija=@0";
+
+        var row = db.QuerySingle(select, IdRezervacija);
+
+        ImeKorisnika = row.ImeKorisnika;
+        PrezimeKorisnika = row.PrezimeKorisnika;
+        Email = row.Email;
+        Destinacija = row.Destinacija;
+        Povratak = row.Povratak;
+        Polazak = row.Polazak;
+        StatusRezervacije = row.StatusRezervacije;
+    }
+
+}
+<br /><br /><br /><br /><br />
+<title>Dodaj rezervaciju:</title>
+<style type="text/css">
+    label {
+        float: left;
+        width: 8em;
+        text-align: right;
+        margin-right: 0.5em;
+    }
+
+    fieldset {
+        padding: 1em;
+        border: 1px solid;
+        width: 35em;
+    }
+
+    legend {
+        padding: 2px 4px;
+        border: 1px solid;
+        font-weight: bold;
+    }
+
+    .validation-summary-errors {
+        font-weight: bold;
+        color: red;
+        font-size: 11pt;
+    }
+</style>
+
+<h1>Ažuriraj</h1>
+@Html.ValidationSummary("")
+<form method="post" action="">
+    <fieldset>
+        <legend>Ažuriraj rezervacije</legend>
+        <div>
+            <label>ImeKorisnika:</label>
+            <input name="ImeKorisnika" type="text" value="@ImeKorisnika" />
+        </div>
+        <div>
+            <label>PrezimeKorisnika:</label>
+            <input name="PrezimeKorisnika" type="text" value="@PrezimeKorisnika" />
+        </div>
+        <div>
+            <label>Email:</label>
+            <input name="Email" type="text" value="@Email" />
+        </div>
+        <div>
+            <label>Destinacija:</label>
+            <input name="Destinacija" type="text" value="@Destinacija" />
+        </div>
+        <div>
+            <label>Povratak:</label>
+            <input name="Povratak" type="text" value="@Povratak" />
+        </div>
+        <div>
+            <label>Polazak:</label>
+            <input name="Polazak" type="text" value="@Polazak" />
+        </div>
+        <div>
+            <label>Status Rezervacije:</label>
+            <input name="StatusRezervacije" type="text" value="@StatusRezervacije" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Ažuriraj" class="submit" />
+        </div>
+    </fieldset>
+</form>

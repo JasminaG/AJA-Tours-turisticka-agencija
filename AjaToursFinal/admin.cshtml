@@ -1,0 +1,357 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "admin";
+    var db = Database.Open("StarterSite");
+    var selectQueryString = "SELECT * FROM Putovanje ORDER BY IdPutovanje";
+    var selectQuery = "SELECT * FROM UserProfile";
+    var select = "SELECT * FROM Rezervacija ORDER BY IdRezervacija";
+    var izbor = "SELECT * FROM Footer ORDER BY Id";
+    var uloge = "SELECT * FROM webpages_UsersInRoles";
+    var korisnici = "SELECT * FROM UserProfile";
+}
+
+@section featured {
+    <style>
+        table, th, td {
+            border: solid 1px #bbbbbb;
+            border-collapse: collapse;
+            padding: 2px;
+        }
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+            /* Style the buttons inside the tab */
+            .tab button {
+                background-color: inherit;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 14px 16px;
+                transition: 0.3s;
+                font-size: 17px;
+            }
+
+                /* Change background color of buttons on hover */
+                .tab button:hover {
+                    background-color: #ddd;
+                }
+
+                /* Create an active/current tablink class */
+                .tab button.active {
+                    background-color: #ccc;
+                }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+    <br /><br /><br /><br /><br />
+    <h1 style="text-align:center; color:gray;">Admin panel</h1>
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Destinacije')">Upravljanje destinacijama</button>
+        <button class="tablinks" onclick="openCity(event, 'Korisnici')">Upravljanje korisnicima</button>
+        <button class="tablinks" onclick="openCity(event, 'Rezervacije')">Upravljanje rezervacijama</button>
+        <button class="tablinks" onclick="openCity(event, 'Footer')">Upravljanje headerom i futerom</button>
+        <button class="tablinks" onclick="openCity(event, 'Uloge')">Upravljanje ulogama</button>
+        <br />
+    </div>
+
+    <div id="Destinacije" class="tabcontent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div style="position:fixed" id="panel">
+                        <a href="~/InsertProducts" title="Dodaj" class="w3-bar-item w3-button glyphicon glyphicon-plus-sign"> Dodaj</a><br />
+                        <a href="~/EditProducts" title="Uredi" class="w3-bar-item w3-button glyphicon glyphicon-edit"> Uredi</a><br />
+                        <a href="~/ListProductsForDelete" title="Izbriši" class="w3-bar-item w3-button glyphicon glyphicon-minus-sign"> Obriši</a><br />
+                    </div>
+                </div>
+                <div class="col-sm-10 content">
+                    <style>
+                        table, th, td {
+                            border: solid 1px #bbbbbb;
+                            border-collapse: collapse;
+                            padding: 2px;
+                            background-color: white;
+                        }
+                    </style>
+                    <br />
+                    <h1>Lista putovanja:</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Naziv</th>
+                                <th>Program</th>
+                                <th>Cijena</th>
+                                <th>Datum kreiranja</th>
+                                <th>Polazak</th>
+                                <th>Povratak</th>
+                                <th>Status</th>
+                                <th>Status rezervacije</th>
+                                <th>Slika</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in db.Query(selectQueryString))
+                            {
+                                <tr>
+                                    <td>@row.IdPutovanje</td>
+                                    <td>@row.NazivPutovanja</td>
+                                    <td>@row.p1@row.p2@row.p3@row.p4</td>
+                                    <td>@row.Cijena</td>
+                                    <td>@row.DatumKreiranjaPutovanja</td>
+                                    <td>@row.Polazak</td>
+                                    <td>@row.Povratak</td>
+                                    <td>@row.StatusPutovanja</td>
+                                    <td>@row.Status</td>
+                                    <td>@row.Slika</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Korisnici" class="tabcontent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div style="position:fixed" id="panel">
+                        <a href="~/InsertProducts2" title="Dodaj" class="w3-bar-item w3-button glyphicon glyphicon-plus-sign"> Dodaj</a><br />
+                        <!-- <a href="~/EditProducts2" title="Uredi" class="w3-bar-item w3-button glyphicon glyphicon-edit"> Uredi</a><br /> -->
+                        <a href="~/ListProductsForDelete2" title="Izbriši" class="w3-bar-item w3-button glyphicon glyphicon-minus-sign"> Obriši</a><br />
+                    </div>
+                </div>
+                <div class="col-sm-10 content">
+                    <style>
+                        table, th, td {
+                            border: solid 1px #bbbbbb;
+                            border-collapse: collapse;
+                            padding: 2px;
+                            background-color: white;
+                        }
+                    </style>
+                    <br />
+                    <h1>Lista korisnika:</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Email</th>
+                                <th>Putovanje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in db.Query(selectQuery))
+                            {
+                            <tr>
+                                <td>@row.UserId</td>
+                                <td>@row.Email</td>
+                                <td>@row.putovanjeID</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Rezervacije" class="tabcontent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div style="position:fixed" id="panel">
+                        <a href="~/InsertProducts3" title="Dodaj" class="w3-bar-item w3-button glyphicon glyphicon-plus-sign"> Dodaj</a><br />
+                        <a href="~/EditProducts3" title="Uredi" class="w3-bar-item w3-button glyphicon glyphicon-edit"> Uredi</a><br />
+                        <a href="~/ListProductsForDelete3" title="Izbriši" class="w3-bar-item w3-button glyphicon glyphicon-minus-sign"> Obriši</a><br />
+                    </div>
+                </div>
+                <div class="col-sm-10 content">
+                    <style>
+                        table, th, td {
+                            border: solid 1px #bbbbbb;
+                            border-collapse: collapse;
+                            padding: 2px;
+                            background-color: white;
+                        }
+                    </style>
+                    <br />
+                    <h1>Lista rezervacija:</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Ime</th>
+                                <th>Prezime</th>
+                                <th>Email</th>
+                                <th>Broj putnika</th>
+                                <th>Destinacija</th>
+                                <th>Povratak</th>
+                                <th>Polazak</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in db.Query(select))
+                            {
+                                <tr>
+                                    <td>@row.IdRezervacija</td>
+                                    <td>@row.ImeKorisnika</td>
+                                    <td>@row.PrezimeKorisnika</td>
+                                    <td>@row.Email</td>
+                                    <td>@row.BrojPutnika</td>
+                                    <td>@row.Destinacija</td>
+                                    <td>@row.Povratak</td>
+                                    <td>@row.Polazak</td>
+                                    <td>@row.StatusRezervacije</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Uloge" class="tabcontent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div style="position:fixed" id="panel">
+                        <a href="~/InsertProducts5" title="Dodaj" class="w3-bar-item w3-button glyphicon glyphicon-plus-sign"> Dodaj</a><br />
+                        <a href="~/EditProducts5" title="Uredi" class="w3-bar-item w3-button glyphicon glyphicon-edit"> Uredi</a><br />
+    <a href="~/ListProductsForDelete5" title="Izbriši" class="w3-bar-item w3-button glyphicon glyphicon-minus-sign"> Obriši</a><br />
+                    </div>
+                </div>
+                <div class="col-sm-10 content">
+                    <style>
+                        table, th, td {
+                            border: solid 1px #bbbbbb;
+                            border-collapse: collapse;
+                            padding: 2px;
+                            background-color: white;
+                        }
+                    </style>
+                    <br />
+                    <h1>Korisnici:</h1>
+                    <table>
+                        @foreach (var row in db.Query(korisnici))
+                        {
+                            <tr>
+                                <td>@row.UserId</td>
+                                <td>@row.Email</td>
+                            </tr>
+                        }
+                    </table>
+                    <h1>Uloge:</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User Id</th>
+                                <th>Uloga Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in db.Query(uloge))
+                            {
+                                <tr>
+                                    <td>@row.UserId</td>
+                                    <td>@row.RoleId</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Footer" class="tabcontent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div style="position:fixed" id="panel">
+                        <a href="~/InsertProducts4" title="Dodaj" class="w3-bar-item w3-button glyphicon glyphicon-plus-sign"> Dodaj</a><br />
+                        <a href="~/EditProducts4" title="Uredi" class="w3-bar-item w3-button glyphicon glyphicon-edit"> Uredi</a><br />
+                        <a href="~/ListProductsForDelete4" title="Izbriši" class="w3-bar-item w3-button glyphicon glyphicon-minus-sign"> Obriši</a><br />
+                    </div>
+                </div>
+                <div class="col-sm-10 content">
+                    <style>
+                        table, th, td {
+                            border: solid 1px #bbbbbb;
+                            border-collapse: collapse;
+                            padding: 2px;
+                            background-color: white;
+                        }
+                    </style>
+                    <br />
+                    <h1>Sadržaj futera:</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Mail</th>
+                                <th>Telefon</th>
+                                <th>Adresa</th>
+                                <th>Copyright</th>
+                                <th>Boja</th>
+                                <th>Logo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in db.Query(izbor))
+                            {
+                                <tr>
+                                    <td>@row.Id</td>
+                                    <td>@row.Mail</td>
+                                    <td>@row.Telefon</td>
+                                    <td>@row.Adresa</td>
+                                    <td>@row.Copy</td>
+                                    <td>@row.Boja</td>
+                                    <td>@row.Logo</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+}

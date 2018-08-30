@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "InsertProduct3";
+
+
+    var db = Database.Open("StarterSite");
+
+    var ImeKorisnika = Request.Form["ImeKorisnika"];
+    var PrezimeKorisnika = Request.Form["PrezimeKorisnika"];
+    var Email = Request.Form["Email"];
+    var Destinacija = Request.Form["Destinacija"];
+    var Povratak = Request.Form["Povratak"];
+    var Polazak = Request.Form["Polazak"];
+    var StatusRezervacije = Request.Form["StatusRezervacije"];
+
+    if (IsPost && Validation.IsValid())
+    {
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
+        if (ModelState.IsValid)
+        {
+            var insertQuery = "INSERT INTO Rezervacija (ImeKorisnika, PrezimeKorisnika, Email, Destinacija, Povratak, Polazak, StatusRezervacije) " +
+                "VALUES (@0, @1, @2, @3, @4, @5, @6)";
+            db.Execute(insertQuery, ImeKorisnika, PrezimeKorisnika, Email, Destinacija, Povratak, Polazak, StatusRezervacije);
+            // Display the page that lists products.
+            Response.Redirect("~/ListProducts3");
+        }
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Dodaj rezervaciju</h1>
+@Html.ValidationSummary("")
+
+<form method="post" action="">
+    <fieldset>
+        <legend>Dodaj</legend>
+        <div>
+            <label>ImeKorisnika:</label>
+            <input name="ImeKorisnika" type="text" value="@ImeKorisnika" />
+        </div>
+        <div>
+            <label>PrezimeKorisnika:</label>
+            <input name="PrezimeKorisnika" type="text" value="@PrezimeKorisnika" />
+        </div>
+        <div>
+            <label>Email:</label>
+            <input name="Email" type="text" value="@Email" />
+        </div>
+        <div>
+            <label>Destinacija:</label>
+            <input name="Destinacija" type="text" value="@Destinacija" />
+        </div>
+        <div>
+            <label>Povratak:</label>
+            <input name="Povratak" type="text" value="@Povratak" />
+        </div>
+        <div>
+            <label>Polazak:</label>
+            <input name="Polazak" type="text" value="@Polazak" />
+        </div>
+        <div>
+            <label>Status Rezervacije:</label>
+            <input name="StatusRezervacije" type="text" value="@StatusRezervacije" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Dodaj" class="submit" />
+        </div>
+    </fieldset>
+</form>

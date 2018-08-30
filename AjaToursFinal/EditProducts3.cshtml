@@ -1,0 +1,63 @@
+﻿@{
+                /**/
+
+                Layout = "~/_SiteLayout.cshtml";
+                Page.Title = "EditProduct2";
+
+                var db = Database.Open("StarterSite");
+                var selectQuery = "SELECT * FROM Rezervacija ORDER BY IdRezervacija";
+
+}
+
+<style type="text/css">
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+        background-color: white;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h6><a href="~/admin">Povratak nazad</a></h6>
+<br />
+<h1>Izmjeni rezervacije:</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <table>
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Id</th>
+                        <th>Ime</th>
+                        <th>Prezime</th>
+                        <th>Email</th>
+                        <th>Broj putnika</th>
+                        <th>Destinacija</th>
+                        <th>Povratak</th>
+                        <th>Polazak</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in db.Query(selectQuery))
+                    {
+                        <tr>
+                            <td><a href="@Href("~/UpdateProducts3", row.IdRezervacija)">Uredi</a></td>
+                            <td>@row.IdRezervacija</td>
+                            <td>@row.ImeKorisnika</td>
+                            <td>@row.PrezimeKorisnika</td>
+                            <td>@row.Email</td>
+                            <td>@row.BrojPutnika</td>
+                            <td>@row.Destinacija</td>
+                            <td>@row.Povratak</td>
+                            <td>@row.Polazak</td>
+                            <td>@row.StatusRezervacije</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

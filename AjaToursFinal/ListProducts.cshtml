@@ -1,0 +1,81 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "ListProducts";
+
+    var db = Database.Open("StarterSite");
+    var selectQueryString = "SELECT * FROM Putovanje ORDER BY IdPutovanje";
+}
+<style>
+    table, th, td {
+        border: solid 1px #bbbbbb;
+        border-collapse: collapse;
+        padding: 2px;
+    }
+    /* Style the tab */
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #ccc;
+            }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+<br /><br /><br /><br /><br />
+<h6><a href="~/admin">Povratak nazad</a></h6>
+<br />
+<h1>Lista destinacija:</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Naziv</th>
+            <th>Cijena</th>
+            <th>Datum kreiranja</th>
+            <th>Polazak</th>
+            <th>Povratak</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in db.Query(selectQueryString))
+        {
+            <tr>
+                <td>@row.IdPutovanje</td>
+                <td>@row.NazivPutovanja</td>
+                <td>@row.Cijena</td>
+                <td>@row.DatumKreiranjaPutovanja</td>
+                <td>@row.Polazak</td>
+                <td>@row.Povratak</td>
+                <td>@row.StatusPutovanja</td>
+            </tr>
+        }
+    </tbody>
+</table>

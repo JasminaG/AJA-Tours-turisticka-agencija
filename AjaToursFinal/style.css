@@ -1,0 +1,310 @@
+/* Pocetak CSS-a_Almir */
+body {
+    background-color: #fff;
+}
+#body {
+    background-color: #dedede;
+}
+.nav a {
+    background-color: white;
+}
+.nav {
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+#admin{
+  display: none !important;
+}
+
+.div1{  
+  float: right;
+  color: black;
+  font-size: 11px;
+  padding: 3px;
+}
+
+.header {
+  padding: 30px;
+  text-align: center;
+}
+
+/*search bar*/
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+/* Side search_Almir */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: blue;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: white;
+        display: block;
+        transition: 0.3s;
+    }
+
+.sidenav a:hover {
+    color: #84b1f9;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+.pretraga{
+  float: right;
+    width: 150px;
+    height: 50px; 
+    padding: 10px;
+}
+/* Footer_Almir */
+.dno{
+padding: 10px;
+}
+#slika{
+  width: 100%;
+  border: 5px;
+}
+.contact{
+  text-align: center;
+}
+/* Footer Phone image Almir */
+.slika1 img:hover {
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+/* Admin_panel */
+#panel{
+    background-color:darkgray;
+}
+.validation-summary-errors {
+    font-weight: bold;
+    color: red;
+    font-size: 11pt;
+}
+
+/* Kraj CSS-a_Almir */
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}
+
+@media only screen and (min-width: 900px) {
+    .dno {
+        height: 271px;
+    }
+}
+.slova{
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+/*   AIDA HONDO */
+
+/*Slike ponuda na index-u AIDA*/
+
+.slikaindex {
+    height: 200px;
+    width: 350px;
+    border-style: solid;
+    border-width: medium;
+    border-color: #6495ED;
+}
+
+
+/*Photo slider*/
+
+
+#slideshow {
+    width: 500px;
+    height: 400px;
+    background-color: dodgerblue;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.textSlider {
+    align-content: center;
+    font-size: 20px;
+    font-style: italic;
+    color: white;
+    font-family: cursive;
+}
+
+
+
+/*onama css za slike* Aida Hondo */
+
+
+.photostyle {
+    border-radius: 50%;
+    border-style: solid;
+    border-width: medium;
+    border-color: #4d94ff;
+    width: 300px;
+    height: 300px;
+}
+/*text - o nama*/
+.nasTim {
+    text-align: center;
+    font-size: 40px;
+    color: white;
+    letter-spacing: 3px;
+    text-shadow: 3px 2px dodgerblue;
+}
+/* tekst imena clanova tima*/
+.nasTim1 {
+    font-size: 20px;
+    font-style: italic bold;
+    text-align: center;
+    color: dodgerblue;
+    letter-spacing: 1px;
+}
+
+.oNama {
+    margin: 20px;
+    padding: 20px;
+    text-align: justify;
+    font-size: 20px;
+    font-style: italic;
+    color: dodgerblue;
+    font-family: cursive;
+}
+
+.oNama1 {
+    text-align: center;
+    font-size: 15px;
+    font-style: italic;
+    color: black;
+}
+
+/* Reservation form* Aida Hodno */
+/* Stilizovanje inputa kao sto su type="text", odabrani elementi i textareas */
+
+input[type=text], select, textarea {
+    width: 100%; /* Puna širina */
+    padding: 12px; /* Neki padding */
+    border: 1px solid #ccc; /* Sivi border */
+    border-radius: 4px; /* Zaobljeni uglovi */
+    box-sizing: border-box; /* Osigurava da padding i sirina budu na mjestu */
+    margin-top: 6px; /* Top margina */
+    margin-bottom: 16px; /* Margina na dnu */
+    margin-right: 16px;
+    resize: vertical /* Omogucava korisniku da vertikalno povecava formu (ali ne i horizontalno) */
+}
+
+input[type=password] {
+    width: 100%; /* Puna širina */
+    padding: 12px; /* Neki padding */
+    border: 1px solid #ccc; /* Sivi border */
+    border-radius: 4px; /* Zaobljeni uglovi */
+    box-sizing: border-box; /* Osigurava da padding i sirina budu na mjestu */
+    margin-top: 6px; /* Top margina */
+    margin-bottom: 16px; /* Margina na dnu */
+    margin-right: 16px;
+    resize: vertical /* Omogucava korisniku da vertikalno povecava formu (ali ne i horizontalno) */
+}
+
+/* Stilizira submit dugme */
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    /* Kada pomjeramo miš po dugmetu, Dodaje tamnu plavu boju */
+    input[type=submit]:hover {
+        background-color: #45a049;
+    }
+
+/* Add a background color and some padding around the form */
+.forma1 {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+
+.forma1 {
+    position: relative;
+    width: 50%;
+    margin: 50px;
+    margin-left: 250px;
+}
+
+.forma2 {
+    margin-left: 70px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    position: relative;
+    width: 70%;
+}

@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "DeleteProduct4";
+
+    var db = Database.Open("StarterSite");
+    var Id = UrlData[0];
+    if (Id.IsEmpty())
+    {
+        Response.Redirect("~/ListProductsForDelete4");
+    }
+    var prod = db.QuerySingle("SELECT * FROM Footer WHERE Id = @0", Id);
+    if (IsPost && !Id.IsEmpty())
+    {
+        var deleteQueryString = "DELETE FROM Footer WHERE Id=@0";
+        db.Execute(deleteQueryString, Id);
+        Response.Redirect("~/ListProductsForDelete4");
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Potvrda</h1>
+<form method="post" action="" name="form">
+    <p>Jeste li sigurni?</p>
+
+    <p>
+        Id: @prod.Id <br />
+        Mail: @prod.Mail <br />
+        Adresa: @prod.Adresa <br />
+        Telefon: @prod.Telefon <br />
+        Copy: @prod.Copy <br />
+        Boja: @prod.Boja <br />
+        Logo: @prod.Logo <br />
+    </p>
+    <p><input type="submit" value="Obriši" /></p>
+</form>

@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "InsertProduct2";
+
+    Validation.RequireField("Email", "Email je obavezan.");
+    Validation.RequireField("putovanjeID", "PutovanjeID je obavezno.");
+
+    var db = Database.Open("StarterSite");
+    var Email = Request.Form["Email"];
+    var putovanjeID = Request.Form["putovanjeID"];
+
+
+    if (IsPost && Validation.IsValid())
+    {
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
+        if (ModelState.IsValid)
+        {
+            var insertQuery = "INSERT INTO UserProfile (Email, putovanjeID) " +
+                "VALUES (@0, @1)";
+            db.Execute(insertQuery, Email, putovanjeID);
+            // Display the page that lists products.
+            Response.Redirect("~/ListProducts2");
+        }
+    }
+}
+<br /><br /><br /><br /><br />
+<h1>Dodaj korisnika</h1>
+@Html.ValidationSummary("")
+
+<form method="post" action="">
+    <fieldset>
+        <legend>Dodaj</legend>
+        <div>
+            <label>Email:</label>
+            <input name="Email" type="text" value="@Email" />
+        </div>
+        <div>
+            <label>Putovanje:</label>
+            <input name="putovanjeID" type="text" value="@putovanjeID" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Dodaj" class="submit" />
+        </div>
+    </fieldset>
+</form>
